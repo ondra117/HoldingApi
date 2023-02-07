@@ -132,7 +132,7 @@ class holdingApi:
 
 if __name__ == "__main__":
     from pprint import pprint
-    api = holdingApi(2704, 926)
+    api = holdingApi(0000, 000)
 
     order = {"08.02.2023": {"idx":12, "attachment":2, "abstandard":[4]}
     }
