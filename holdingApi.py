@@ -1,5 +1,4 @@
 from requests import Session
-import json
 from pprint import pprint
 
 class holdingApi:
@@ -130,6 +129,24 @@ class holdingApi:
     def raw_order(self, order:dict):
         self.ses.post("https://pardubice.czholding.cz/objed.php", data=order, headers={"Accept-Charset":"cp1250"})
 
+    def storno(self, storno):
+        days = list(self.get_order().keys())
+        data = {}
+        for s in storno:
+            if s in days:
+                data[f"o{days.index(s) + 1}"] = f"{self.name}:{s}:2"
+        
+        self.ses.post("https://pardubice.czholding.cz/storna.asp", data=data, headers={"Accept-Charset":"cp1250"})
+
+    def storno_all(self):
+        days = list(self.get_order().keys())
+        data = {}
+        for idx, day in enumerate(days):
+            data[f"o{idx + 1}"] = f"{self.name}:{day}:2"
+
+        self.ses.post("https://pardubice.czholding.cz/storna.asp", data=data, headers={"Accept-Charset":"cp1250"})
+
+
 if __name__ == "__main__":
     from pprint import pprint
     api = holdingApi(0000, 000)
@@ -137,8 +154,10 @@ if __name__ == "__main__":
     order = {"08.02.2023": {"idx":12, "attachment":2, "abstandard":[4]}
     }
 
+    
+
 
     # pprint(api.raw_order(order))
-    # pprint(api.get_order())
-    pprint(api.preview())
+    pprint(api.get_order().keys())
+    # pprint(api.preview())
     # pprint(api.get_balance())
